@@ -1,5 +1,4 @@
-const data = `
-6 8 9 11 14 12
+const data = `6 8 9 11 14 12
 31 33 36 39 42 42
 5 6 7 9 11 13 17
 7 9 12 15 17 18 21 27
@@ -998,13 +997,33 @@ const data = `
 23 26 29 32 34 35
 18 17 15 13 12 10 7
 51 48 45 42 40
-15 16 19 20 23 26 27
-`;
-const dataArray = data.split(`\n`).map((x) => x.split(" "));
+15 16 19 20 23 26 27`;
+let reportArray = data.split(`\n`);
+console.log(reportArray[0]);
+let dataArray = reportArray.map((x) => x.split(" ").map((y) => parseInt(y)));
+console.log(dataArray[0]);
 
-const processReport = (arr) => {
-  let safeCount = 0;
-  arr.forEach((x) => {});
-  return safeCount;
+const isSafe = (arr) => {
+  let isDecreasing = false;
+  if (arr.length >= 2) {
+    isDecreasing = arr[0] > arr[1];
+  }
+  for (let i = 0; i < arr.length; i++) {
+    if (isDecreasing) {
+      if (arr[i + 1] >= arr[i] || arr[i] - arr[i + 1] > 3) {
+        return false;
+      }
+    } else {
+      if (arr[i] >= arr[i + 1] || arr[i + 1] - arr[i] > 3) {
+        return false;
+      }
+    }
+  }
+  return true;
 };
-console.log(processReport(dataArray));
+
+let safe = 0;
+dataArray.forEach((x) => {
+  isSafe(x) ? (safe += 1) : (safe += 0);
+});
+console.log(safe);
