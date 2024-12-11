@@ -999,23 +999,33 @@ const data = `6 8 9 11 14 12
 51 48 45 42 40
 15 16 19 20 23 26 27`;
 let reportArray = data.split(`\n`);
-console.log(reportArray[0]);
 let dataArray = reportArray.map((x) => x.split(" ").map((y) => parseInt(y)));
-console.log(dataArray[0]);
 
-const isSafe = (arr) => {
-  let isDecreasing = false;
+const dampen = (arr) => {
+  for (let i = 0; i < arr.length; i++) {
+    const copy = arr.slice();
+    copy.splice(i, 1);
+    if (isSafe(copy, true)) {
+      return true;
+    }
+    continue;
+  }
+  return false;
+};
+
+const isSafe = (arr, dampened) => {
+  let isDecreasing;
   if (arr.length >= 2) {
     isDecreasing = arr[0] > arr[1];
   }
   for (let i = 0; i < arr.length; i++) {
     if (isDecreasing) {
       if (arr[i + 1] >= arr[i] || arr[i] - arr[i + 1] > 3) {
-        return false;
+        return dampened ? false : dampen(arr);
       }
     } else {
       if (arr[i] >= arr[i + 1] || arr[i + 1] - arr[i] > 3) {
-        return false;
+        return dampened ? false : dampen(arr);
       }
     }
   }
@@ -1024,6 +1034,6 @@ const isSafe = (arr) => {
 
 let safe = 0;
 dataArray.forEach((x) => {
-  isSafe(x) ? (safe += 1) : (safe += 0);
+  isSafe(x, false) ? safe++ : safe;
 });
 console.log(safe);
